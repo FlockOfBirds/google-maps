@@ -21,23 +21,23 @@ module.exports = function (grunt) {
                 "tasks": [ "copy:source" ]
             }
         },
-        
+
         compress: {
             dist: {
                 options: {
                     archive: "./dist/" + pkg.version + "/" + pkg.name + ".mpk",
                     mode: "zip"
                 },
-                files: [{
+                files: [ {
                     expand: true,
                     date: new Date(),
                     store: false,
                     cwd: "./dist/tmp/src",
                     src: [ "**/*" ]
-                }]
+                } ]
             }
         },
-        
+
         copy: {
             distDeployment: {
                 files: [
@@ -46,7 +46,7 @@ module.exports = function (grunt) {
             },
             mpk: {
                 files: [
-                    { dest: "./dist/MxTestProject/widgets", cwd: "./dist/" + pkg.version + "/", src: [ pkg.name + ".mpk"], expand: true }
+                    { dest: "./dist/MxTestProject/widgets", cwd: "./dist/" + pkg.version + "/", src: [ pkg.name + ".mpk" ], expand: true }
                 ]
             },
             source: {
@@ -55,7 +55,7 @@ module.exports = function (grunt) {
                 ]
             }
         },
-        
+
         webpack: {
             renderer: webpackConfig
         },
@@ -67,19 +67,24 @@ module.exports = function (grunt) {
                 "./dist/MxTestProject/deployment/web/widgets/" + pkg.name + "/*",
                 "./dist/MxTestProject/widgets/" + pkg.name + ".mpk"
             ]
+        },
+        checkDependencies: {
+            this: {},
         }
     });
-    
+
     grunt.loadNpmTasks("grunt-contrib-compress");
     grunt.loadNpmTasks("grunt-contrib-clean");
     grunt.loadNpmTasks("grunt-contrib-watch");
     grunt.loadNpmTasks("grunt-contrib-copy");
+    grunt.loadNpmTasks("grunt-check-dependencies");
     grunt.loadNpmTasks("grunt-webpack");
 
-    grunt.registerTask("default", [ "clean build", "watch" ]);    
+    grunt.registerTask("default", [ "clean build", "watch" ]);
     grunt.registerTask(
         "clean build",
-        "Compiles all the assets and copies the files to the build directory.", [ "clean:build", "webpack" ,"compress:dist", "copy:mpk" ]
+        "Compiles all the assets and copies the files to the build directory.",
+        [ "checkDependencies", "clean:build", "webpack" , "compress:dist", "copy:mpk" ]
     );
     grunt.registerTask("build", [ "clean build" ]);
 };

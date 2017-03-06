@@ -1,99 +1,147 @@
-import { Component, DOM, Props } from "react";
-import { Marker } from "./Marker";
+import { Component, DOM, Props, ReactElement, createElement } from "react";
+import GoogleMap from "google-map-react";
+import { GoogleMapProps, LatLng } from "google-map-react";
 
+import { Alert } from "./Alert";
+import { Marker, MarkerProps } from "./Marker";
+
+export interface Location {
+    address?: string;
+    latitude?: number;
+    longitude?: number;
+}
 export interface MapProps extends Props<Map> {
     apiKey?: string;
-    address: string;
+    defaultCenterAddress: string;
+    locations: Location[];
 }
 
-interface MapState {
-    isLoaded: boolean;
+export interface MapState {
+    alertMessage?: string;
+    center?: LatLng;
+    isLoaded?: boolean;
+    locations?: Location[];
 }
 
 export class Map extends Component<MapProps, MapState> {
+    // Location of Mendix Netherlands office
+    private defaultCenterLocation: LatLng = { lat: 51.9107963, lng: 4.4789878 };
     static defaultProps: MapProps = {
-        address: undefined
+        defaultCenterAddress: "",
+        locations: []
     };
-    private map: google.maps.Map;
-    private mapDiv: HTMLElement;
-    private defaultCenter: "Gedempte Zalmhaven 4k, 3011 BT Rotterdam, Netherlands";
-
     constructor(props: MapProps) {
         super(props);
 
-        this.createMarker = this.createMarker.bind(this);
-        this.centerToDefault = this.centerToDefault.bind(this);
-        this.state = { isLoaded: typeof google !== "undefined" };
+        this.state = {
+            center: this.defaultCenterLocation,
+            isLoaded: false,
+            locations: props.locations
+        };
     }
 
-    componentDidUpdate() {
-        if (this.state.isLoaded) {
-            this.loadMap();
-        }
+    componentWillReceiveProps(nextProps: MapProps) {
+        this.plotAddresses(nextProps.locations);
+        this.centerMap(nextProps.locations);
+        this.setState({ locations: nextProps.locations });
     }
 
     render() {
-        return DOM.div({ className: "mx-google-maps", ref: (c) => this.mapDiv = c });
+        return DOM.div({ className: "widget-google-maps" },
+            createElement(Alert, { message: this.state.alertMessage }),
+            createElement(GoogleMap, this.getGoogleMapProps(),
+                this.createMakers()
+            )
+        );
     }
 
-    componentDidMount() {
-        if (!this.state.isLoaded) {
-            this.loadGoogleScript();
+    private getGoogleMapProps(): GoogleMapProps {
+        return {
+            bootstrapURLKeys: { key: this.props.apiKey },
+            center: this.state.center,
+            defaultZoom: 7,
+            onGoogleApiLoaded: () => this.handleOnGoogleApiLoaded(),
+            resetBoundsOnResize: true,
+            yesIWantToUseGoogleMapApiInternals: true
+        };
+    }
+
+    private handleOnGoogleApiLoaded() {
+        this.setState({ isLoaded: true });
+        this.centerMap(this.props.locations);
+        this.plotAddresses(this.props.locations);
+    }
+
+    private centerMap(locations: Location[]) {
+        if (locations.length === 1) {
+            if (locations[0].latitude && locations[0].longitude) {
+                this.updateCenterState({ lat: locations[0].latitude, lng: locations[0].longitude });
+            } else {
+                this.getLocation(locations[0].address as string, (location: LatLng) => {
+                    this.updateCenterState(location);
+                });
+            }
+        } else {
+            this.getLocation(this.props.defaultCenterAddress as string, (location: LatLng) => {
+                this.updateCenterState(location);
+            });
         }
     }
 
-    componentWillUnmount() {
-        google.maps.event.clearListeners(this.map, "resize");
+    private updateCenterState(location: LatLng) {
+        if (location) {
+            this.setState({ center: location });
+        } else {
+            this.setState({ center: this.defaultCenterLocation });
+        }
     }
 
-    private loadGoogleScript(callback?: Function) {
-        const script = document.createElement("script");
-        script.src = `https://maps.googleapis.com/maps/api/js?key=${this.props.apiKey}`;
-        script.onload = () => {
-            this.setState({ isLoaded: true });
-        };
-        script.onerror = () => {
-            mx.ui.error("Could not load Google Maps script. Please check your internet connection");
-        };
-        document.body.appendChild(script);
+    private plotAddresses(locations: Location[]) {
+        for (let i = 0; i < locations.filter((location) => !!location.address).length; i++) {
+            this.getLocation(locations[i].address as string, (location: LatLng) => {
+                if (location) {
+                    locations[i].latitude = Number(location.lat);
+                    locations[i].longitude = Number(location.lng);
+                    this.setState({ locations });
+                }
+            });
+        }
     }
 
-    private loadMap() {
-        const mapConfig: google.maps.MapOptions = { zoom: 14 };
-        this.map = new google.maps.Map(this.mapDiv, mapConfig);
-        this.getLocation(this.props.address !== undefined
-            ? this.props.address
-            : this.defaultCenter,
-            this.createMarker,
-            this.centerToDefault
-        );
-        google.maps.event.addDomListener(window, "resize", () => {
-            const center = this.map.getCenter();
-            google.maps.event.trigger(this.map, "resize");
-            this.map.setCenter(center);
-        });
+    private getLocation(address: string, callback: (result: LatLng | null) => void) {
+        if (this.state.isLoaded) {
+            const geocoder = new google.maps.Geocoder();
+            geocoder.geocode({ address }, (results, status) => {
+                if (status === google.maps.GeocoderStatus.OK) {
+                    this.setState({ alertMessage: "" });
+                    callback({
+                        lat: results[0].geometry.location.lat(),
+                        lng: results[0].geometry.location.lng()
+                    });
+                } else {
+                    this.setState({ alertMessage: `Can not find address ${address}` });
+                    callback(null);
+                }
+            });
+        } else {
+            callback(null);
+        }
     }
 
-    private getLocation(address: string, successCallback: Function, failureCallback?: Function) {
-        const geocoder = new google.maps.Geocoder();
-        geocoder.geocode({ address }, (results, status) => {
-            if (status === google.maps.GeocoderStatus.OK) {
-                successCallback(results[0].geometry.location);
-            } else {
-                failureCallback();
-            }
-        });
-    }
-
-    private createMarker(location: google.maps.LatLng) {
-        Marker({ location, map: this.map });
-        this.map.setCenter(location);
-    }
-
-    private centerToDefault() {
-        this.getLocation(this.defaultCenter, (defaultLocation: google.maps.LatLng) => {
-            this.map.setCenter(defaultLocation);
-            mx.ui.error(`Could not find location from address ${this.props.address}`);
-        });
+    private createMakers(): Array<ReactElement<MarkerProps>> {
+        const markerElements: Array<ReactElement<MarkerProps>> = [];
+        if (this.state.locations) {
+            this.state.locations.map((locationObject: Location, index) => {
+                // tslint:disable-next-line:max-line-length
+                if (locationObject.latitude && locationObject.latitude !== 0 && locationObject.longitude && locationObject.longitude !== 0) {
+                    markerElements.push(createElement(Marker, {
+                        key: index,
+                        lat: Number(locationObject.latitude),
+                        lng: Number(locationObject.longitude)
+                    }));
+                }
+            });
+        }
+        return markerElements;
     }
 }

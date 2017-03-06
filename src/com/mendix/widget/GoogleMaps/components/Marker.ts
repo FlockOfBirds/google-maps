@@ -1,10 +1,9 @@
-interface MarkerProps {
-    location: google.maps.LatLng;
-    map: google.maps.Map;
+import { DOM, StatelessComponent } from "react";
+
+export interface MarkerProps {
+    lat: number;
+    lng: number;
 }
-export const Marker = (props: MarkerProps) => (
-    new google.maps.Marker({
-        map: props.map,
-        position: props.location
-    })
-);
+
+export const Marker: StatelessComponent<MarkerProps> = (props) =>
+    DOM.div({ className: "widget-google-maps-marker" });

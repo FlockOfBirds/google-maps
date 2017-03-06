@@ -1,4 +1,21 @@
-export class MapsMock implements google.maps.Map {
+/* tslint:disable:max-line-length */
+class MockGoogle {
+    maps: MapsMock;
+    setup(): void {
+        const googleMockObject = MockGoogle.prototype as any;
+        googleMockObject.maps = MapsMock.prototype;
+        googleMockObject.maps.Geocoder = MockGeocoder;
+        googleMockObject.maps.Map = MapsMock;
+        googleMockObject.maps.LatLngBounds = LatLngBoundsMock;
+        googleMockObject.maps.LatLng = LatLngMock;
+        googleMockObject.maps.Marker = MarkerMock;
+        googleMockObject.maps.event = EventMock;
+        googleMockObject.maps.GeocoderStatus = GeocoderStatus;
+    }
+}
+
+// tslint:disable-next-line:max-classes-per-file
+class MapsMock implements google.maps.Map {
     controls: google.maps.MVCArray[];
     data: google.maps.Data;
     mapTypes: google.maps.MapTypeRegistry;
@@ -45,48 +62,129 @@ export class MapsMock implements google.maps.Map {
     unbind(key: string): void {/** */ }
     unbindAll(): void {/** */ }
 }
-
-export class GeocoderMock implements google.maps.Geocoder {
+// tslint:disable-next-line:max-classes-per-file
+class MockGeocoder implements google.maps.Geocoder {
     // cant make it static, at time of require not all classes are mocked.
-    successResult: google.maps.GeocoderResult[] = [
-        {
-            address_components: [
-                {
-                    long_name: "1600",
-                    short_name: "1600",
-                    types: [ "street_number" ]
-                },
-                {
-                    long_name: "Amphitheatre Pkwy",
-                    short_name: "Amphitheatre Pkwy",
-                    types: [ "route" ]
-                },
-                {
-                    long_name: "Mountain View",
-                    short_name: "Mountain View",
-                    types: [ "locality", "political" ]
-                },
-                {
-                    long_name: "Santa Clara County",
-                    short_name: "Santa Clara County",
-                    types: [ "administrative_area_level_2", "political" ]
-                },
-                {
-                    long_name: "California",
-                    short_name: "CA",
-                    types: [ "administrative_area_level_1", "political" ]
-                },
-                {
-                    long_name: "United States",
-                    short_name: "US",
-                    types: [ "country", "political" ]
-                },
-                {
-                    long_name: "94043",
-                    short_name: "94043",
-                    types: [ "postal_code" ]
-                }
-            ],
+    successResult: google.maps.GeocoderResult[] = [ {
+        address_components: [ {
+                long_name: "1600",
+                short_name: "1600",
+                types: [ "street_number" ]
+            }, {
+                long_name: "Amphitheatre Pkwy",
+                short_name: "Amphitheatre Pkwy",
+                types: [ "route" ]
+            }, {
+                long_name: "Mountain View",
+                short_name: "Mountain View",
+                types: [ "locality", "political" ]
+            }, {
+                long_name: "Santa Clara County",
+                short_name: "Santa Clara County",
+                types: [ "administrative_area_level_2", "political" ]
+            }, {
+                long_name: "California",
+                short_name: "CA",
+                types: [ "administrative_area_level_1", "political" ]
+            }, {
+                long_name: "United States",
+                short_name: "US",
+                types: [ "country", "political" ]
+            }, {
+                long_name: "94043",
+                short_name: "94043",
+                types: [ "postal_code" ]
+            } ],
+            formatted_address: "1600 Amphitheatre Parkway, Mountain View, CA 94043, USA",
+            geometry: {
+                bounds: new google.maps.LatLngBounds(),
+                location: new google.maps.LatLng(30, 118),
+                location_type: 0,
+                viewport: new google.maps.LatLngBounds()
+            },
+            partial_match: true,
+            place_id: "ChIJ2eUgeAK6j4ARbn5u_wAGqWA",
+            postcode_localities: [ "" ],
+            types: [ "street_address" ]
+        }
+    ];
+    zeroResult: google.maps.GeocoderResult[] = [ {
+        address_components: [],
+        formatted_address: "",
+        geometry: {
+            bounds: new google.maps.LatLngBounds(),
+            location:  new google.maps.LatLng(3, 18),
+            location_type: 0,
+            viewport: new google.maps.LatLngBounds()
+        },
+        partial_match: false,
+        place_id: "",
+        postcode_localities: [],
+        types: []
+    } ];
+    multipleResult: google.maps.GeocoderResult[] = [ {
+            address_components: [ {
+                long_name: "Winnetka",
+                short_name: "Winnetka",
+                types: [ "sublocality", "political" ]
+            }, {
+                long_name: "Los Angeles",
+                short_name: "Los Angeles",
+                types: [ "administrative_area_level_3", "political" ]
+            }, {
+                long_name: "Los Angeles",
+                short_name: "Los Angeles",
+                types: [ "administrative_area_level_2", "political" ]
+            }, {
+                long_name: "California",
+                short_name: "CA",
+                types: [ "administrative_area_level_1", "political" ]
+            }, {
+                long_name: "United States",
+                short_name: "US",
+                types: [ "country", "political" ]
+            } ],
+            formatted_address: "Winnetka, California, USA",
+            geometry: {
+                bounds: new google.maps.LatLngBounds(),
+                location: new google.maps.LatLng(34.213171, -118.571022),
+                location_type: 0,
+                viewport: new google.maps.LatLngBounds()
+            },
+            partial_match: true,
+            place_id: "ChIJ0fd4S_KbwoAR2hRDrsr3HmQ",
+            postcode_localities: [ "" ],
+            types: [ "sublocality", "political" ]
+        }, {
+            address_components: [ {
+                long_name: "1600",
+                short_name: "1600",
+                types: [ "street_number" ]
+            }, {
+                long_name: "Amphitheatre Pkwy",
+                short_name: "Amphitheatre Pkwy",
+                types: [ "route" ]
+            }, {
+                long_name: "Mountain View",
+                short_name: "Mountain View",
+                types: [ "locality", "political" ]
+            }, {
+                long_name: "Santa Clara County",
+                short_name: "Santa Clara County",
+                types: [ "administrative_area_level_2", "political" ]
+            }, {
+                long_name: "California",
+                short_name: "CA",
+                types: [ "administrative_area_level_1", "political" ]
+            }, {
+                long_name: "United States",
+                short_name: "US",
+                types: [ "country", "political" ]
+            }, {
+                long_name: "94043",
+                short_name: "94043",
+                types: [ "postal_code" ]
+            } ],
             formatted_address: "1600 Amphitheatre Parkway, Mountain View, CA 94043, USA",
             geometry: {
                 bounds: new google.maps.LatLngBounds(),
@@ -100,30 +198,22 @@ export class GeocoderMock implements google.maps.Geocoder {
             types: [ "street_address" ]
         }
     ];
-    zeroResult: google.maps.GeocoderResult[] = [
-        {
-            address_components: [],
-            formatted_address: "",
-            geometry: {
-                bounds: null,
-                location: null,
-                location_type: 0,
-                viewport: null
-            },
-            partial_match: null,
-            place_id: null,
-            postcode_localities: [ null ],
-            types: [ null ]
-        }
-    ];
     geocode(request: google.maps.GeocoderRequest, callback: (results: google.maps.GeocoderResult[],
         status: google.maps.GeocoderStatus) => void): void {
-        console.log("Mock result");
-        callback(this.successResult, google.maps.GeocoderStatus.OK);
+        if (request.address === "multipleAddress") {
+            callback(this.multipleResult, google.maps.GeocoderStatus.OK);
+        } else if (request.address === "invalidAddress") {
+            callback(this.zeroResult, google.maps.GeocoderStatus.ZERO_RESULTS);
+        } else if (request.address) {
+            callback(this.successResult, google.maps.GeocoderStatus.OK);
+        } else {
+            callback(this.zeroResult, google.maps.GeocoderStatus.ZERO_RESULTS);
+        }
     }
 }
 
-export class LatLngBoundsMock implements google.maps.LatLngBounds {
+// tslint:disable-next-line:max-classes-per-file
+class LatLngBoundsMock implements google.maps.LatLngBounds {
     constructor(sw?: google.maps.LatLng | google.maps.LatLngLiteral, ne?: google.maps.LatLng | google.maps.LatLngLiteral) {/** */ }
     contains(latLng: google.maps.LatLng): boolean { return true; }
     equals(other: google.maps.LatLngBounds | google.maps.LatLngBoundsLiteral): boolean { return true; }
@@ -133,6 +223,7 @@ export class LatLngBoundsMock implements google.maps.LatLngBounds {
     getSouthWest(): google.maps.LatLng { return new google.maps.LatLng(0, 0); }
     intersects(other: google.maps.LatLngBounds | google.maps.LatLngBoundsLiteral): boolean { return true; }
     isEmpty(): boolean { return false; }
+    toJSON(): google.maps.LatLngBoundsLiteral { return { east: 0, north: 0, south: 0, west: 0 }; }
     toSpan(): google.maps.LatLng { return new google.maps.LatLng(0, 0); }
     toString(): string { return "Fake"; }
     toUrlValue(precision?: number): string { return ""; }
@@ -140,8 +231,9 @@ export class LatLngBoundsMock implements google.maps.LatLngBounds {
         return new google.maps.LatLngBounds();
     }
 }
-// Implemented for mocking
-export class LatLngMock implements google.maps.LatLng {
+
+// tslint:disable-next-line:max-classes-per-file
+class LatLngMock implements google.maps.LatLng {
     _lat: number;
     _lng: number;
     constructor(lat: number, lng: number, noWrap?: boolean) {
@@ -158,7 +250,8 @@ export class LatLngMock implements google.maps.LatLng {
     toJSON(): google.maps.LatLngLiteral { return({ lat: 0, lng: 0 }); }
 }
 
-export class MarkerMock implements google.maps.Marker {
+// tslint:disable-next-line:max-classes-per-file
+class MarkerMock implements google.maps.Marker {
     static MAX_ZINDEX: number;
     map: google.maps.Map;
     constructor(opts?: google.maps.MarkerOptions) {/** */ }
@@ -167,7 +260,7 @@ export class MarkerMock implements google.maps.Marker {
     getClickable(): boolean { return true; }
     getCursor(): string { return "Fake"; }
     getDraggable(): boolean { return true; }
-    getIcon(): string | google.maps.Icon | Symbol { return "Fake"; }
+    getIcon(): string | google.maps.Icon | symbol { return "Fake"; }
     getLabel(): google.maps.MarkerLabel { return true; }
     getMap(): google.maps.Map | google.maps.StreetViewPanorama { return this.map; }
     getOpacity(): number { return 0; }
@@ -182,7 +275,7 @@ export class MarkerMock implements google.maps.Marker {
     setClickable(flag: boolean): void { /** */ }
     setCursor(cursor: string): void { /** */ }
     setDraggable(flag: boolean): void { /** */ }
-    setIcon(icon: string | google.maps.Icon | Symbol): void { /** */ }
+    setIcon(icon: string | google.maps.Icon | symbol): void { /** */ }
     setLabel(label: string | google.maps.MarkerLabel): void { /** */ }
     setMap(map: google.maps.Map | google.maps.StreetViewPanorama): void { /** */ }
     setOpacity(opacity: number): void { /** */ }
@@ -218,7 +311,7 @@ export enum GeocoderStatus {
     ZERO_RESULTS
 }
 
-export enum GeocoderLocationType {
+enum GeocoderLocationType {
     APPROXIMATE,
     GEOMETRIC_CENTER,
     RANGE_INTERPOLATED,
@@ -226,28 +319,29 @@ export enum GeocoderLocationType {
 }
 
 // Add basic static handler store for testing.
-export class EventMock {
-    static handlers: Function[] = [];
-    static addDomListener(instance: Object, eventName: string, handler: Function, capture?: boolean): google.maps.MapsEventListener {
+// tslint:disable-next-line:max-classes-per-file
+class EventMock {
+    static handlers: Array<() => void> = [];
+    static addDomListener(instance: object, eventName: string, handler: () => void, capture?: boolean): google.maps.MapsEventListener {
         EventMock.handlers.push(handler);
         return { remove: () => { /** */ } };
     }
-    static addDomListenerOnce(instance: Object, eventName: string, handler: Function, capture?: boolean): google.maps.MapsEventListener {
+    static addDomListenerOnce(instance: object, eventName: string, handler: () => void, capture?: boolean): google.maps.MapsEventListener {
         EventMock.handlers.push(handler);
         return { remove: () => { /** */ } };
     }
-    static addListener(instance: Object, eventName: string, handler: Function): google.maps.MapsEventListener {
+    static addListener(instance: object, eventName: string, handler: () => void): google.maps.MapsEventListener {
         EventMock.handlers.push(handler);
         return { remove: () => { /** */ } };
     }
-    static addListenerOnce(instance: Object, eventName: string, handler: Function): google.maps.MapsEventListener {
+    static addListenerOnce(instance: object, eventName: string, handler: () => void): google.maps.MapsEventListener {
         EventMock.handlers.push(handler);
         return { remove: () => { /** */ } };
     }
-    static clearInstanceListeners(instance: Object): void {
+    static clearInstanceListeners(instance: object): void {
         EventMock.handlers = [];
     }
-    static clearListeners(instance: Object, eventName: string): void {
+    static clearListeners(instance: object, eventName: string): void {
         EventMock.handlers = [];
     }
     static removeListener(listener: google.maps.MapsEventListener): void {/** */ }
@@ -260,3 +354,7 @@ export class EventMock {
         EventMock.handlers = [];
     }
 }
+
+const googleMockObject = MockGoogle.prototype as any;
+
+export const mockGoogleMaps = googleMockObject;

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<widget id="com.mendix.widget.GoogleMaps.GoogleMaps" needsEntityContext="true" xmlns="http://www.mendix.com/widget/1.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mendix.com/widget/1.0/ ../../../../xsd/widget.xsd">
+<widget id="com.mendix.widget.GoogleMaps.GoogleMaps" needsEntityContext="false" xmlns="http://www.mendix.com/widget/1.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mendix.com/widget/1.0/ ../../../../xsd/widget.xsd">
     <name>Google Maps</name>
-    <description>Show locations on google maps</description>
+    <description>Show address on Google Maps</description>
     <icon>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2Fy
         ZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyBJREFUeNpkk01sVFUYhp/7f+evDNOZ
@@ -25,17 +25,93 @@
     </icon>
     <properties>
         <property key="apiKey" type="string" required="false">
-            <caption>Api key</caption>
-            <category>Data source</category>
-            <description>The google maps Javascript API v3 does not require an API key to function correctly. However, google strongly encourages you to load the maps API using an APIs key</description>
+            <caption>API key</caption>
+            <category>General</category>
+            <description>The Google Maps Javascript API v3 does not require an API key to function correctly. However, Google strongly encourages you to load the Maps API using an APIs key</description>
         </property>
-        <property key="addressAttribute" type="attribute" required="true">
+        <property key="defaultCenterAddress" type="string" required="true">
+            <caption>Default center address</caption>
+            <category>General</category>
+            <description>The default address property</description>
+        </property>
+        <property key="dataSource" type="enumeration" defaultValue="static">
+            <caption>Data source</caption>
+            <category>Data source</category>
+            <description>Where should the locations be retrieved from?</description>
+            <enumerationValues>
+                <enumerationValue key="static">Static</enumerationValue>
+                <enumerationValue key="context">Context</enumerationValue>
+                <enumerationValue key="XPath">XPath</enumerationValue>
+                <enumerationValue key="microflow">Microflow</enumerationValue>
+            </enumerationValues>
+        </property>
+        <property key="staticLocations" type="object" isList="true" required="false">
+            <caption>Static locations</caption>
+            <category>Data source</category>
+            <description/>
+            <properties>
+                <property key="address" type="string" required="false">
+                    <caption>Address attribute</caption>
+                    <category>Location</category>
+                    <description>Attribute where the address string is stored. It is not used if coordinates are specified</description>
+                </property>
+                <property key="latitude" type="string"  required="false">
+                    <caption>Latitude attribute</caption>
+                    <category>Location</category>
+                    <description>The latitude attribute.</description>
+                </property>
+                <property key="longitude" type="string"  required="false">
+                    <caption>Longitude attribute</caption>
+                    <category>Location</category>
+                    <description>The longitude attribute.</description>
+                </property>
+            </properties>
+        </property>
+        <property key="locationsEntity" type="entity" required="false">
+            <caption>Locations entity</caption>
+            <category>Data source</category>
+            <description>The entity from which the locations will be retrieved for the XPath and microflow options</description>
+        </property>
+        <property key="addressAttribute" type="attribute" entityProperty="locationsEntity" required="false">
             <caption>Address</caption>
             <category>Data source</category>
-            <description>Use address of known places such as cities, street</description>
+            <description>Attribute where the address string is stored. It is not used if coordinates are specified</description>
             <attributeTypes>
                 <attributeType name="String"/>
             </attributeTypes>
+        </property>
+        <property key="latitudeAttribute" type="attribute" entityProperty="locationsEntity" required="false">
+            <caption>Latitude</caption>
+            <category>Data source</category>
+            <description>The latitude attribute.</description>
+            <attributeTypes>
+                <attributeType name="Integer"/>
+                <attributeType name="Float"/>
+                <attributeType name="Decimal"/>
+                <attributeType name="String"/>
+            </attributeTypes>
+        </property>
+        <property key="longitudeAttribute" type="attribute" entityProperty="locationsEntity" required="false">
+            <caption>Longitude</caption>
+            <category>Data source</category>
+            <description>The longitude attribute.</description>
+            <attributeTypes>
+                <attributeType name="Integer"/>
+                <attributeType name="Float"/>
+                <attributeType name="Decimal"/>
+                <attributeType name="String"/>
+            </attributeTypes>
+        </property>
+        <property key="entityConstraint" type="entityConstraint" entityProperty="locationsEntity" required="false">
+            <caption>XPath</caption>
+            <category>Data source</category>
+            <description>Constraint on the locations entity</description>
+        </property>
+        <property key="dataSourceMicroflow" type="microflow" required="false">
+            <caption>Microflow </caption>
+            <category>Data source</category>
+            <description>Returns the locations to display</description>
+            <returnType type="Object" entityProperty="locationsEntity" isList="true"/>
         </property>
     </properties>
 </widget>

@@ -1,3 +1,3 @@
 interface Window {
-    google: any;  
+    google: any;
 }
