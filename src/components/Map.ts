@@ -16,7 +16,7 @@ export interface MapProps extends Props<Map> {
     apiKey?: string;
     defaultCenterAddress: string;
     height: number;
-    heightUnit: "percentage" | "pixels";
+    heightUnit: "percentageOfWidth" | "percentageOfParent" | "pixels";
     locations: Location[];
     width: number;
     widthUnit: "percentage" | "pixels";
@@ -32,6 +32,7 @@ export interface MapState {
 export class Map extends Component<MapProps, MapState> {
     // Location of Mendix Netherlands office
     private defaultCenterLocation: LatLng = { lat: 51.9107963, lng: 4.4789878 };
+    private mapWrapper: HTMLElement;
 
     constructor(props: MapProps) {
         super(props);
@@ -50,12 +51,9 @@ export class Map extends Component<MapProps, MapState> {
     }
 
     render() {
-        const style = {
-            paddingBottom: this.props.heightUnit === "percentage" ? `${this.props.height}%` : this.props.height,
-            width: this.props.widthUnit === "percentage" ? `${this.props.width}%` : this.props.width
-        };
-
-        return DOM.div({ className: "widget-google-maps-wrapper", style },
+        // tslint:disable-next-line:max-line-length
+        return DOM.div({ className: "widget-google-maps-wrapper", ref: node => this.mapWrapper = node, style: this.getStyle()
+        },
             DOM.div({ className: "widget-google-maps" },
                 createElement(Alert, { message: this.state.alertMessage }),
                 createElement(GoogleMap, this.getGoogleMapProps(),
@@ -63,6 +61,28 @@ export class Map extends Component<MapProps, MapState> {
                 )
             )
         );
+    }
+
+    componentDidMount() {
+        const wrapperElement = this.mapWrapper.parentElement;
+        if (this.props.heightUnit === "percentageOfParent" && wrapperElement) {
+            wrapperElement.style.height = "100%";
+            wrapperElement.style.width = "100%";
+        }
+    }
+
+    private getStyle(): object {
+        const style: { paddingBottom?: string; width: string, height?: string } = {
+            width: this.props.widthUnit === "percentage" ? `${this.props.width}%` : `${this.props.width}`
+        };
+        if (this.props.heightUnit === "percentageOfWidth") {
+            style.paddingBottom = `${this.props.height}%`;
+        } else if (this.props.heightUnit === "pixels") {
+            style.paddingBottom = `${this.props.height}`;
+        } else if (this.props.heightUnit === "percentageOfParent") {
+            style.height = `${this.props.height}%`;
+        }
+        return style;
     }
 
     private getGoogleMapProps(): GoogleMapProps {

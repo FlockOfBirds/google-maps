@@ -24,7 +24,7 @@ describe("Map", () => {
         WidthParam?: number,
         HeightParam?: number,
         WidthUnitParam?: "percentage" | "pixels",
-        HeightUnitParam?: "percentage" | "pixels"): ShallowWrapper<MapProps, any> => {
+        HeightUnitParam?: "percentageOfWidth" | "percentageOfParent" | "pixels"): ShallowWrapper<MapProps, any> => {
         const output = renderMap({
             apiKey: APIKeyParam,
             defaultCenterAddress: address,
@@ -46,7 +46,7 @@ describe("Map", () => {
     });
 
     it("should render with the map structure", () => {
-        const map = setUpMap([ { address } ], undefined, 100, 75, "percentage", "percentage");
+        const map = setUpMap([ { address } ], undefined, 100, 75, "percentage", "percentageOfWidth");
         const style = { paddingBottom: "75%", width: "100%" };
 
         expect(map).toBeElement(

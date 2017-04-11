@@ -132,13 +132,14 @@
             <category>Appearance</category>
             <description>Height of the map</description>
         </property>
-        <property key="heightUnit" type="enumeration" defaultValue="percentage">
+        <property key="heightUnit" type="enumeration" defaultValue="percentageOfWidth">
             <caption>Height unit</caption>
             <category>Appearance</category>
             <description/>
             <enumerationValues>
-                <enumerationValue key="percentage">Percentage</enumerationValue>
+                <enumerationValue key="percentageOfWidth">Percentage of width</enumerationValue>
                 <enumerationValue key="pixels">Pixels</enumerationValue>
+                <enumerationValue key="percentageOfParent">Percentage of Parent</enumerationValue>
             </enumerationValues>
         </property>
     </properties>

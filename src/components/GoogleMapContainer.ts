@@ -10,7 +10,7 @@ interface GoogleMapContainerProps {
     defaultCenterAddress: string;
     entityConstraint: string;
     height: number;
-    heightUnit: "percentage" | "pixels";
+    heightUnit: "percentageOfWidth" | "percentageOfParent" | "pixels";
     locationsEntity: string;
     addressAttribute: string;
     latitudeAttribute: string;
@@ -31,7 +31,7 @@ class GoogleMapContainer extends Component<GoogleMapContainerProps, { alertMessa
         const alertMessage = this.validateProps();
         this.subscriptionHandles = [];
         this.state = { alertMessage, locations: [] };
-        this.unSubscribeSubscriptions(this.props.mxObject);
+        this.subscribe(this.props.mxObject);
     }
 
     render() {
@@ -52,7 +52,7 @@ class GoogleMapContainer extends Component<GoogleMapContainerProps, { alertMessa
     }
 
     componentWillReceiveProps(nextProps: GoogleMapContainerProps) {
-        this.unSubscribeSubscriptions(nextProps.mxObject);
+        this.subscribe(nextProps.mxObject);
         this.fetchData(nextProps.mxObject);
     }
 
@@ -61,7 +61,7 @@ class GoogleMapContainer extends Component<GoogleMapContainerProps, { alertMessa
     }
 
     componentWillUnmount() {
-        this.unSubscribeSubscriptions(this.props.mxObject);
+        this.unSubscribe();
     }
 
     private validateProps() {
@@ -82,7 +82,7 @@ class GoogleMapContainer extends Component<GoogleMapContainerProps, { alertMessa
         return message;
     }
 
-    private unSubscribeSubscriptions(contextObject: mendix.lib.MxObject) {
+    private subscribe(contextObject: mendix.lib.MxObject) {
         this.subscriptionHandles.forEach(handle => window.mx.data.unsubscribe(handle));
 
         if (contextObject) {
@@ -99,6 +99,10 @@ class GoogleMapContainer extends Component<GoogleMapContainerProps, { alertMessa
                 callback: () => this.fetchData(contextObject), guid: contextObject.getGuid()
             })));
         }
+    }
+
+    private unSubscribe() {
+        this.subscriptionHandles.forEach(window.mx.data.unsubscribe);
     }
 
     private fetchData(contextObject: mendix.lib.MxObject) {
