@@ -48,7 +48,11 @@ class GoogleMapContainer extends Component<GoogleMapContainerProps, { alertMessa
 
     render() {
         if (this.state.alertMessage) {
-            return createElement(Alert, { message: this.state.alertMessage });
+            return createElement(Alert, {
+                bootstrapStyle: "danger",
+                className: "widget-google-maps-alert",
+                message: this.state.alertMessage
+            });
         } else {
             return createElement(Map, {
                 apiKey: this.props.apiKey,

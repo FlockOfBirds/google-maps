@@ -1,4 +1,4 @@
-import { DOM, StatelessComponent } from "react";
+import { StatelessComponent, createElement } from "react";
 
 export interface MarkerProps {
     lat: number;
@@ -6,6 +6,6 @@ export interface MarkerProps {
 }
 
 export const Marker: StatelessComponent<MarkerProps> = (props) =>
-    DOM.div({ className: "widget-google-maps-marker" });
+    createElement("div", { className: "widget-google-maps-marker" });
 
 Marker.displayName = "Marker";

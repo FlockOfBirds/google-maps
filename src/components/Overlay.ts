@@ -1,9 +1,9 @@
-import { DOM, SFC, SyntheticEvent } from "react";
+import { SFC, SyntheticEvent, createElement } from "react";
 
 export const Overlay: SFC<{}> = ({ children }) =>
-    DOM.div({ style: { position: "relative" } },
+    createElement("div", { style: { position: "relative" } },
         children,
-        DOM.div({
+        createElement("div", {
             onClick: preventEvent,
             onTouchStart: preventEvent,
             style: {

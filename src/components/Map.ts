@@ -1,4 +1,4 @@
-import { Component, DOM, Props, ReactElement, createElement } from "react";
+import { Component, Props, ReactElement, createElement } from "react";
 import GoogleMap, { GoogleMapLoader, LatLng } from "google-map-react";
 
 import { Alert } from "./Alert";
@@ -57,14 +57,18 @@ export class Map extends Component<MapProps, MapState> {
     }
 
     render() {
-        return DOM.div(
+        return createElement("div",
             {
                 className: "widget-google-maps-wrapper",
-                ref: node => this.mapWrapper = node,
+                ref: (node: HTMLElement | null) => this.mapWrapper = node,
                 style: this.getStyle()
             },
-            DOM.div({ className: "widget-google-maps" },
-                createElement(Alert, { message: this.state.alertMessage }),
+            createElement("div", { className: "widget-google-maps" },
+                createElement(Alert, {
+                    bootstrapStyle: "danger",
+                    className: "widget-google-maps-alert",
+                    message: this.state.alertMessage
+                }),
                 createElement(GoogleMap,
                     {
                         bootstrapURLKeys: { key: this.props.apiKey },

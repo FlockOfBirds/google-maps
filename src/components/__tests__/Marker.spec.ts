@@ -1,4 +1,4 @@
-import { DOM, createElement } from "react";
+import { createElement } from "react";
 import { shallow } from "enzyme";
 
 import { Marker } from "../Marker";
@@ -9,7 +9,7 @@ describe("Marker", () => {
         const marker = shallow(createElement(Marker, { lat: 30, lng: 118 }));
 
         expect(marker).toBeElement(
-            DOM.div({ className: "widget-google-maps-marker" })
+            createElement("div", { className: "widget-google-maps-marker" })
         );
     });
 });

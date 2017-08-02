@@ -1,7 +1,7 @@
 {
   "name": "google-maps",
   "widgetName": "GoogleMaps",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "Show locations on Google Maps",
   "copyright": "Mendix BV",
   "scripts": {
@@ -25,19 +25,20 @@
   },
   "devDependencies": {
     "@types/big.js": "0.0.31",
+    "@types/classnames": "^2.2.0",
     "@types/core-js": "0.9.36",
     "@types/enzyme": "^2.7.4",
     "@types/googlemaps": "^3.26.4",
     "@types/jasmine": "^2.5.45",
     "@types/karma": "^0.13.33",
-    "@types/react": "^15.0.16",
-    "@types/react-dom": "^0.14.23",
+    "@types/react": "^16.0.0",
+    "@types/react-dom": "^15.5.1",
     "check-dependencies": "^1.0.1",
     "clean-webpack-plugin": "^0.1.16",
     "copy-webpack-plugin": "^4.0.1",
     "css-loader": "^0.28.0",
     "enzyme": "^2.7.1",
-    "extract-text-webpack-plugin": "^2.1.0",
+    "extract-text-webpack-plugin": "^3.0.0",
     "grunt": "1.0.1",
     "grunt-check-dependencies": "^1.0.0",
     "grunt-contrib-clean": "^1.0.0",
@@ -46,8 +47,8 @@
     "grunt-contrib-watch": "^1.0.0",
     "grunt-file-append": "0.0.7",
     "grunt-newer": "^1.1.1",
-    "grunt-webpack": "^2.0.1",
-    "istanbul-instrumenter-loader": "^2.0.0",
+    "grunt-webpack": "^3.0.2",
+    "istanbul-instrumenter-loader": "^3.0.0",
     "jasmine": "^2.5.2",
     "json-loader": "^0.5.4",
     "karma": "^1.4.0",
@@ -66,17 +67,19 @@
     "react-dom": "^15.4.2",
     "remap-istanbul": "^0.9.1",
     "source-map-loader": "^0.2.0",
-    "style-loader": "^0.16.1",
+    "style-loader": "^0.18.2",
     "ts-loader": "^2.0.1",
     "tslint": "^5.4.2",
     "tslint-eslint-rules": "^4.1.1",
     "typescript": "^2.2.1",
     "url-loader": "^0.5.8",
-    "webpack": "^2.3.1",
+    "webpack": "^3.4.0",
     "webpack-dev-server": "^2.2.0",
     "webpack-merge": "^4.1.0"
   },
   "dependencies": {
-    "google-map-react": "^0.24.0"
+    "classnames": "^2.2.5",
+    "google-map-react": "^0.24.0",
+    "prop-types": "^15.5.10"
   }
 }
