@@ -10,6 +10,7 @@ interface WrapperProps {
 
 interface GoogleMapContainerProps extends WrapperProps {
     apiKey: string;
+    autoZoom: boolean;
     dataSource: DataSource;
     dataSourceMicroflow: string;
     defaultCenterAddress: string;
@@ -61,6 +62,7 @@ class GoogleMapContainer extends Component<GoogleMapContainerProps, { alertMessa
         } else {
             return createElement(Map, {
                 apiKey: this.props.apiKey,
+                autoZoom: this.props.autoZoom,
                 className: this.props.class,
                 defaultCenterAddress: this.props.defaultCenterAddress,
                 height: this.props.height,
@@ -116,6 +118,9 @@ class GoogleMapContainer extends Component<GoogleMapContainerProps, { alertMessa
             !(props.longitudeAttribute && props.latitudeAttribute))) {
             message = "The 'Address attribute' or 'Latitude Attribute' and 'Longitude attribute' "
                 + "is required for this data source";
+        }
+        if (!props.autoZoom && props.zoomLevel < 2 ) {
+            message = "Zoom level must be greater than 1";
         }
 
         return message;

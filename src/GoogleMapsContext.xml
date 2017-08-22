@@ -71,6 +71,11 @@
                 <attributeType name="Decimal"/>
             </attributeTypes>
         </property>
+        <property key="autoZoom" type="boolean" defaultValue="true">
+            <caption>Auto zoom</caption>
+            <category>Appearance</category>
+            <description>If true then the widget will control the zoom. It will not use the specified zoom level </description>
+        </property>
          <property key="zoomLevel" type="integer" defaultValue="10">
             <caption>Zoom level</caption>
             <category>Appearance</category>
