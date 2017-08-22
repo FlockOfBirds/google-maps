@@ -240,6 +240,9 @@ export class Map extends Component<MapProps, MapState> {
                         lat: results[0].geometry.location.lat(),
                         lng: results[0].geometry.location.lng()
                     });
+                } else if (status === google.maps.GeocoderStatus.OVER_QUERY_LIMIT) {
+                    this.setState({ alertMessage: `Google free quota request exceeded.` });
+                    callback();
                 } else {
                     this.setState({ alertMessage: `Can not find address ${address}` });
                     callback();
