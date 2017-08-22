@@ -18,6 +18,7 @@ export interface Location {
 export interface MapProps {
     className?: string;
     apiKey?: string;
+    autoZoom: boolean;
     defaultCenterAddress: string;
     height: number;
     heightUnit: heightUnitType;
@@ -80,9 +81,10 @@ export class Map extends Component<MapProps, MapState> {
                         onGoogleApiLoaded: this.handleOnGoogleApiLoaded,
                         options: {
                             draggable: this.props.optionDrag,
+                            fullscreenControl: false,
                             mapTypeControl: this.props.optionMapControl,
                             maxZoom: 20,
-                            minZoom: 1,
+                            minZoom: 2,
                             minZoomOverride: true,
                             resetBoundsOnResize: true,
                             scrollwheel: this.props.optionScroll,
@@ -182,13 +184,13 @@ export class Map extends Component<MapProps, MapState> {
     private setZoom(props: MapProps): void {
         if (this.mapLoader) {
             let zoom = this.mapLoader.map.getZoom();
-            if (props.zoomLevel > 0) {
-                zoom = props.zoomLevel;
-            } else {
+            if (props.autoZoom) {
                 const defaultBoundZoom = 6;
                 if (zoom && (zoom > defaultBoundZoom) || !zoom) {
                     zoom = defaultBoundZoom;
                 }
+            } else {
+                zoom = props.zoomLevel;
             }
             this.mapLoader.map.setZoom(zoom);
         }
@@ -239,6 +241,9 @@ export class Map extends Component<MapProps, MapState> {
                         lat: results[0].geometry.location.lat(),
                         lng: results[0].geometry.location.lng()
                     });
+                } else if (status === google.maps.GeocoderStatus.OVER_QUERY_LIMIT) {
+                    this.setState({ alertMessage: `Google free quota request exceeded.` });
+                    callback();
                 } else {
                     this.setState({ alertMessage: `Can not find address ${address}` });
                     callback();
