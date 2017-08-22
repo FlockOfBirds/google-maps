@@ -19,6 +19,7 @@ declare module "google-map-react" {
     }
 
     export interface MapLoaderProps {
+        fullscreenControl: boolean;
         minZoom: number;
         minZoomOverride?: boolean;
         maxZoom?: number;
