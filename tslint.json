@@ -134,7 +134,8 @@
     ],
     "curly": false,
     "arrow-parens": false,
-    "linebreak-style": [ true, "LF" ]
+    "linebreak-style": [ true, "LF" ],
+    "tslint.jsEnable": true
   },
   "jsRules": {
     "trailing-comma": [

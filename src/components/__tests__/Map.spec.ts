@@ -203,7 +203,7 @@ describe("Map", () => {
         });
 
         it("should display the first marker if multiple locations are found", () => {
-            const output = setUpMap([ { address: "multipleAddress" } ] );
+            const output = setUpMap([ { address: "multipleAddress" } ]);
 
             const marker = output.find(Marker);
 

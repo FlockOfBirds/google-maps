@@ -80,7 +80,8 @@ module.exports = function(grunt) {
                 "./dist/" + pkg.version + "/" + pkg.widgetName + "/*",
                 "./dist/tmp/**/*",
                 "./dist/MxTestProject/deployment/web/widgets/" + pkg.widgetName + "/*",
-                "./dist/MxTestProject/widgets/" + pkg.widgetName + ".mpk"
+                "./dist/MxTestProject/widgets/" + pkg.widgetName + ".mpk",
+                "./dist/wdio/**/*"
             ]
         },
 
