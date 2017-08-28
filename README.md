@@ -2,6 +2,7 @@
 [![Dependency Status](https://david-dm.org/mendixlabs/google-maps.svg)](https://david-dm.org/mendixlabs/google-maps)
 [![Dev Dependency Status](https://david-dm.org/mendixlabs/google-maps.svg#info=devDependencies)](https://david-dm.org/mendixlabs/google-maps#info=devDependencies)
 [![codecov](https://codecov.io/gh/mendixlabs/google-maps/branch/master/graph/badge.svg)](https://codecov.io/gh/mendixlabs/google-maps)
+![badge](https://img.shields.io/badge/mendix-7.5.1-green.svg)
 
 # Google Maps
 * Show locations on google maps

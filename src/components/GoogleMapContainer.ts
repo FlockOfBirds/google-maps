@@ -119,7 +119,7 @@ class GoogleMapContainer extends Component<GoogleMapContainerProps, { alertMessa
             message = "The 'Address attribute' or 'Latitude Attribute' and 'Longitude attribute' "
                 + "is required for this data source";
         }
-        if (!props.autoZoom && props.zoomLevel < 2 ) {
+        if (!props.autoZoom && props.zoomLevel < 2) {
             message = "Zoom level must be greater than 1";
         }
 
