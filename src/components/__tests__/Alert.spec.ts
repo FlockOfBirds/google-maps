@@ -1,7 +1,10 @@
-import { shallow } from "enzyme";
 import { createElement } from "react";
+import { configure, shallow } from "enzyme";
+import Adapter = require("enzyme-adapter-react-16");
 
 import { Alert, AlertProps } from "../Alert";
+
+configure({ adapter: new Adapter() });
 
 describe("Alert", () => {
     const message = "This is an error";

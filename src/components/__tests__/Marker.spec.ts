@@ -1,7 +1,10 @@
 import { createElement } from "react";
-import { shallow } from "enzyme";
+import { configure, shallow } from "enzyme";
+import Adapter = require("enzyme-adapter-react-16");
 
 import { Marker } from "../Marker";
+
+configure({ adapter: new Adapter() });
 
 describe("Marker", () => {
 

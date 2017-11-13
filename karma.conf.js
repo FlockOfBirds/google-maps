@@ -8,8 +8,7 @@ Object.assign(webpackConfig, {
         "react/lib/ReactContext",
         "react/addons",
         "jsdom",
-        /^mxui\/|^mendix\/|^dojo\/|^dijit\//,
-        "react-test-renderer/shallow"
+        /^mxui\/|^mendix\/|^dojo\/|^dijit\//
     ],
 });
 
