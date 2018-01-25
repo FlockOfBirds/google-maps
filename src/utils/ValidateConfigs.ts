@@ -3,13 +3,13 @@ import { GoogleMapContainerProps } from "../components/GoogleMapContainer";
 export class ValidateConfigs {
 
     public static validate(props: GoogleMapContainerProps): string {
-        let message = "";
+        const message: string[] = [];
         const invalidEnumKeys = props.markerImages.filter(markerImage =>
-            /\s/.test(markerImage.enumKey)
+            /^\w+$/.test(markerImage.enumKey)
         );
 
         if (props.dataSource === "static" && !props.staticLocations.length) {
-            message = "At least one static location is required for 'Data source 'Static'";
+            message.push("At least one static location is required for 'Data source 'Static'");
         }
 
         if (props.dataSource === "static") {
@@ -17,41 +17,54 @@ export class ValidateConfigs {
                 !location.address && !(location.latitude && location.longitude)
             );
             if (invalidLocations.length > 0) {
-                message = `${invalidLocations} invalid static locations.
-            The 'Address' or 'Latitude' and 'Longitude' is required for each 'Static' data source`;
+                const invalidAddresses: string[] = [];
+                invalidLocations.map(element => {
+                    if (!element.address) {
+                        invalidAddresses.push("address");
+                    }
+                    if (!element.longitude) {
+                        invalidAddresses.push("longitude");
+                    }
+                    if (!element.latitude) {
+                        invalidAddresses.push("latitude");
+                    }
+                });
+                message.push(`invalid static locations.
+            The ${invalidAddresses.join(", ")} is required for each 'Static' data source`);
             }
         }
 
         if (props.dataSource === "XPath" && !props.locationsEntity) {
-            message = "The 'Locations entity' is required for 'Data source' 'XPath'";
+            message.push("The 'Locations entity' is required for 'Data source' 'XPath'");
         }
 
         if (props.dataSource === "microflow" && !props.dataSourceMicroflow) {
-            message = "A 'Microflow' is required for 'Data source' 'Microflow'";
+            message.push("A 'Microflow' is required for 'Data source' 'Microflow'");
         }
 
         if (props.dataSource !== "static" && (!props.addressAttribute &&
             !(props.longitudeAttribute && props.latitudeAttribute))) {
-            message = "The 'Address attribute' or 'Latitude Attribute' and 'Longitude attribute' "
-                + "is required for this data source";
+            message.push("The 'Address attribute' or 'Latitude Attribute' and 'Longitude attribute' "
+                + "is required for this data source");
         }
 
         if (!props.autoZoom && props.zoomLevel < 2) {
-            message = "Zoom level must be greater than 1";
+            message.push("Zoom level must be greater than 1");
         }
 
         if (invalidEnumKeys.length > 0) {
-            message = `${invalidEnumKeys} invalid enumeration keys on custom markers. Enumeration keys should not contain space `;
+            message.push("Invalid enumeration keys on custom markers. " +
+            "Enumeration keys should start with a letter and can only contain letters, digits and underscores");
         }
 
         if (props.mapStyles.trim()) {
             try {
                 JSON.parse(props.mapStyles);
             } catch (error) {
-                message = "Error parsing Maps style: " + error.message;
+                message.push("Error parsing Maps style: " + error.message);
             }
         }
 
-        return message;
+        return message.join(", ");
     }
 }
