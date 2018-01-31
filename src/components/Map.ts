@@ -178,7 +178,7 @@ export class Map extends Component<MapProps, MapState> {
             this.setState({ isLoaded: true });
             this.resolveAddresses(this.props);
         } else {
-            const alertMessage = `Google maps load failed, Check internet connection.`;
+            const alertMessage = "Google maps load failed, Check internet connection.";
             this.setState({ alertMessage });
         }
     }
@@ -210,6 +210,8 @@ export class Map extends Component<MapProps, MapState> {
     }
 
     private resolveAddresses(props: MapProps) {
+        const invalidLocations: string[] = [];
+
         if (this.mapLoader) {
             this.bounds = new google.maps.LatLngBounds();
         }
@@ -223,12 +225,17 @@ export class Map extends Component<MapProps, MapState> {
                             location.longitude = Number(locationLookup.lng);
                             this.setState({ locations: props.locations });
                             this.updateBounds(props, location);
+                        } else {
+                            invalidLocations.push(`${location.address}`);
                         }
                     });
                 } else if (this.validLocation(location)) {
                     this.updateBounds(props, location);
                 }
             });
+            if (invalidLocations.length > 0) {
+                this.setState({ alertMessage: `Can not find address ${invalidLocations.join(", ")}` });
+            }
         }
         if (props.defaultCenterAddress) {
             this.getLocation(props.defaultCenterAddress, location =>
@@ -255,7 +262,7 @@ export class Map extends Component<MapProps, MapState> {
                         lng: results[0].geometry.location.lng()
                     });
                 } else if (status === google.maps.GeocoderStatus.OVER_QUERY_LIMIT) {
-                    this.setState({ alertMessage: `Google free quota request exceeded.` });
+                    this.setState({ alertMessage: "Google free quota request exceeded." });
                     callback();
                 } else {
                     this.setState({ alertMessage: `Can not find address ${address}` });
