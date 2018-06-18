@@ -36,12 +36,12 @@ class MxUiMock implements mx.ui {
             async?: boolean,
             callback?: (result: mendix.lib.MxObject | mendix.lib.MxObject[] | boolean | number | string) => void,
             error?: (e: Error) => void,
-            onValidation?: ()=>{},
+            onValidation?: () => {},
         },
         _scope?: any
     ): void { /* */ }
     back(): void { /* */ }
-    confirmation(_args: { content: string, proceed: string, cancel: string, handler: ()=>{} }): void { /* */ }
+    confirmation(_args: { content: string, proceed: string, cancel: string, handler: () => {} }): void { /* */ }
     error(_msg: string, _modal?: boolean): void { /* */ }
     exception(_msg: string): void { /* */ }
     getTemplate(_mxid: string, _content: string): DocumentFragment {
@@ -59,8 +59,8 @@ class MxUiMock implements mx.ui {
     openForm(
         _path: string,
         _args?: {
-            location?: "content" | "popup" | "modal",
-            domNode?: HTMLElement,
+            location?: "content" | "popup" | "modal" | "node",
+            domNode?: HTMLElement | undefined,
             title?: string,
             context?: mendix.lib.MxContext,
             callback?(form: mxui.lib.form._FormBase): void,
@@ -70,10 +70,10 @@ class MxUiMock implements mx.ui {
     ): void { /* */ }
     showLogin(_messageCode: number): void { /* */ }
     reload(_callback?: () => void): void { /* */ };
-    translate(_lib: string, _errorName: string): string { return "fakeTranslate";};
+    translate(_lib: string, _errorName: string): string { return "fakeTranslate"; };
 }
 
-let mxMockObject =  MxMock.prototype;
+let mxMockObject = MxMock.prototype;
 mxMockObject.ui = MxUiMock.prototype;
 
 export const mockMendix = mxMockObject;
