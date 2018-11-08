@@ -1,6 +1,6 @@
-import { Component, ReactElement, createElement } from "react";
+import { Component, createElement } from "react";
 import { Map, MapProps } from "./components/Map";
-import { Alert } from "./components/Alert";
+import { Alert } from "../components/Alert";
 import { GoogleMapContainerProps } from "./components/GoogleMapContainer";
 import { parseStaticLocations, parseStyle } from "./utils/ContainerUtils";
 import { ValidateConfigs } from "./utils/ValidateConfigs";
@@ -14,26 +14,18 @@ type VisibilityMap = {
 export class preview extends Component<GoogleMapContainerProps, {}> {
     render() {
         const warnings = ValidateConfigs.validate(this.props);
-        let reactElement: ReactElement<{}>;
         if (!warnings) {
-            reactElement = createElement(Map, preview.transformProps(this.props));
+            return createElement(Map, preview.transformProps(this.props));
         } else {
-            reactElement = createElement("div", {},
-                createElement(Alert, {
-                    bootstrapStyle: "danger",
-                    className: "widget-google-maps-alert",
-                    message: warnings
-                }),
-                createElement(Map, preview.transformProps(this.props))
-            );
+            return createElement("div", {},
+                createElement(Alert, { bootstrapStyle: "danger", className: "widget-google-maps-alert" }, warnings),
+                createElement(Map, preview.transformProps(this.props)));
         }
-        return createElement("div", {}, reactElement);
     }
 
     private static transformProps(props: GoogleMapContainerProps): MapProps {
-        const locations = props.dataSource === "static"
-            ? parseStaticLocations(props)
-            : [];
+        const locations = props.dataSource === "static" ? parseStaticLocations(props) : [];
+
         return {
             apiKey: props.apiKey,
             autoZoom: props.autoZoom,
@@ -81,9 +73,10 @@ export function getVisibleProperties(valueMap: GoogleMapContainerProps, visibili
         visibilityMap.addressAttribute = false;
         visibilityMap.markerImageAttribute = false;
     }
+
     return visibilityMap;
 }
 
 export function getPreviewCss() {
-    return require("./ui/GoogleMaps.css");
+    return require("../ui/GoogleMaps.css");
 }

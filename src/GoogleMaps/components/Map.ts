@@ -3,11 +3,11 @@ import { CSSProperties, Component, ReactElement, createElement } from "react";
 import * as classNames from "classnames";
 import GoogleMap, { GoogleMapLoader, GoogleMapProps, LatLng } from "google-map-react";
 
-import { Alert } from "./Alert";
+import { Alert } from "../../components/Alert";
 import { Marker, MarkerProps } from "./Marker";
 import { Location } from "../utils/ContainerUtils";
 
-import "../ui/GoogleMaps.css";
+import "../../ui/GoogleMaps.css";
 
 export type widthUnitType = "percentage" | "pixels";
 export type heightUnitType = "percentageOfWidth" | "percentageOfParent" | "pixels";
@@ -46,7 +46,7 @@ export class Map extends Component<MapProps, MapState> {
     // Location of Mendix Netherlands office
     private defaultCenterLocation: LatLng = { lat: 51.9107963, lng: 4.4789878 };
     private mapLoader?: GoogleMapLoader;
-    private bounds: google.maps.LatLngBounds;
+    private bounds!: google.maps.LatLngBounds;
 
     constructor(props: MapProps) {
         super(props);
@@ -72,9 +72,8 @@ export class Map extends Component<MapProps, MapState> {
             createElement("div", { className: "widget-google-maps" },
                 createElement(Alert, {
                     bootstrapStyle: "danger",
-                    className: "widget-google-maps-alert",
-                    message: this.state.alertMessage
-                }),
+                    className: "widget-google-maps-alert"
+                }, this.state.alertMessage),
                 this.renderGoogleMap()
             )
         );
@@ -131,6 +130,7 @@ export class Map extends Component<MapProps, MapState> {
                 console.error("Error parsing Maps styles", error, this.props.mapStyles);
             }
         }
+
         return [ {
             featureType: "poi",
             elementType: "labels",
@@ -145,7 +145,7 @@ export class Map extends Component<MapProps, MapState> {
         // TODO CHECK UPDATE LIB has solved it?
         // https://github.com/istarkov/google-map-react/issues/397
         const iFrame = this.getIframe();
-        if (iFrame) {
+        if (iFrame && iFrame.contentWindow) {
             iFrame.contentWindow.addEventListener("resize", this.onResizeIframe); // TODO throttles
         }
     }
@@ -154,7 +154,7 @@ export class Map extends Component<MapProps, MapState> {
         return document.getElementsByClassName("t-page-editor-iframe")[0] as HTMLIFrameElement;
     }
 
-    private onResizeIframe(_event: CustomEvent) {
+    private onResizeIframe() {
         if (this.mapLoader) {
             const originalCenter = this.mapLoader.map.getCenter();
             this.mapLoader.maps.event.trigger(this.mapLoader.map, "resize");
@@ -246,6 +246,7 @@ export class Map extends Component<MapProps, MapState> {
 
     private validLocation(location: Location): boolean {
         const { latitude: lat, longitude: lng } = location;
+
         return typeof lat === "number" && typeof lng === "number"
             && lat <= 90 && lat >= -90
             && lng <= 180 && lng >= -180
@@ -254,12 +255,12 @@ export class Map extends Component<MapProps, MapState> {
 
     private setDefaultCenter(props: MapProps) {
         if (props.defaultCenterLatitude && props.defaultCenterLongitude) {
-              this.setState({
-                  center: {
-                      lat: Number(props.defaultCenterLatitude),
-                      lng: Number(props.defaultCenterLongitude)
-                  }
-              });
+            this.setState({
+                center: {
+                    lat: Number(props.defaultCenterLatitude),
+                    lng: Number(props.defaultCenterLongitude)
+                }
+            });
         } else if (props.defaultCenterAddress) {
             this.getLocation(props.defaultCenterAddress, location =>
                 location ? this.setState({ center: location }) : this.setState({ center: this.defaultCenterLocation }));
@@ -305,6 +306,7 @@ export class Map extends Component<MapProps, MapState> {
                 }
             });
         }
+
         return markerElements;
     }
 }

@@ -1,5 +1,6 @@
 import { SFC, SyntheticEvent, createElement } from "react";
 
+// tslint:disable-next-line:variable-name
 export const Overlay: SFC<{}> = ({ children }) =>
     createElement("div", { style: { position: "relative" } },
         children,

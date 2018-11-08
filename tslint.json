@@ -10,7 +10,11 @@
       "check-space"
     ],
     "eofline": true,
-    "indent": [ true, "spaces" ],
+    "indent": [
+      true,
+      "spaces",
+      4
+    ],
     "member-ordering": [
       true,
       "variables-before-functions"
@@ -36,8 +40,8 @@
     "one-line": [
       true,
       "check-catch",
-      "check-finally",
       "check-else",
+      "check-finally",
       "check-open-brace",
       "check-whitespace"
     ],
@@ -53,6 +57,9 @@
       true,
       "allow-null-check"
     ],
+    "typedef": [
+      true
+    ],
     "typedef-whitespace": [
       true,
       {
@@ -65,7 +72,8 @@
     ],
     "variable-name": [
       true,
-      "ban-keywords"
+      "ban-keywords",
+      "check-format"
     ],
     "whitespace": [
       true,
@@ -82,12 +90,6 @@
     ],
     "no-multi-spaces": [
       true
-    ],
-    "no-submodule-imports": [
-      true,
-      "tests/mocks/GoogleMaps",
-      "tests/mocks/Mendix",
-      "react-test-renderer/shallow"
     ],
     "no-extra-semi": true,
     "no-irregular-whitespace": true,
@@ -136,14 +138,19 @@
       }
     ],
     "curly": false,
-    "max-line-length": [
-      true,
-      150
-    ],
     "arrow-parens": false,
-    "no-namespace": false,
+    "no-object-literal-type-assertion": false,
+    "linebreak-style": [
+      true,
+      "LF"
+    ],
+    "object-literal-sort-keys": false,
+    "array-type": false,
+    "max-line-length": false,
+    "no-submodule-imports": false,
     "no-implicit-dependencies": false,
-    "object-literal-sort-keys": false
+    "no-namespace": false,
+    "newline-before-return": true
   },
   "jsRules": {
     "trailing-comma": [
@@ -153,6 +160,10 @@
     "array-bracket-spacing": [
       true,
       "always"
+    ],
+    "linebreak-style": [
+      true,
+      "LF"
     ]
   }
 }

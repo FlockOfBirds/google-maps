@@ -1,6 +1,6 @@
 import { Component, createElement } from "react";
 import { Map, heightUnitType, widthUnitType } from "./Map";
-import { Alert } from "./Alert";
+import { Alert } from "../../components/Alert";
 import { ValidateConfigs } from "../utils/ValidateConfigs";
 import { Location, StaticLocation, getStaticMarkerUrl, parseStaticLocations, parseStyle } from "../utils/ContainerUtils";
 
@@ -62,9 +62,8 @@ class GoogleMapContainer extends Component<GoogleMapContainerProps, { alertMessa
         if (this.state.alertMessage) {
             return createElement(Alert, {
                 bootstrapStyle: "danger",
-                className: "widget-google-maps-alert",
-                message: this.state.alertMessage
-            });
+                className: "widget-google-maps-alert"
+            }, this.state.alertMessage);
         } else {
             return createElement(Map, {
                 apiKey: this.props.apiKey,
@@ -159,6 +158,7 @@ class GoogleMapContainer extends Component<GoogleMapContainerProps, { alertMessa
         const requiresContext = entityConstraint && entityConstraint.indexOf("[%CurrentObject%]") > -1;
         if (!contextGuid && requiresContext) {
             this.setState({ locations: [] });
+
             return;
         }
 

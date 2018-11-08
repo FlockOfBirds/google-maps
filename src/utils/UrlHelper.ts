@@ -5,6 +5,7 @@ export class UrlHelper {
             return path;
         }
         // Static resource path should already contain cachebust from the modeler.
+
         return mx.appUrl + path;
     }
 

@@ -16,10 +16,13 @@ class MockGoogle {
 }
 
 class MapsMock implements google.maps.Map {
-    controls: Array<google.maps.MVCArray<Node>>;
-    data: google.maps.Data;
-    mapTypes: google.maps.MapTypeRegistry;
-    overlayMapTypes: google.maps.MVCArray<google.maps.MapType>;
+    setClickableIcons(): void {
+        throw new Error("Method not implemented.");
+    }
+    controls!: Array<google.maps.MVCArray<Node>>;
+    data!: google.maps.Data;
+    mapTypes!: google.maps.MapTypeRegistry;
+    overlayMapTypes!: google.maps.MVCArray<google.maps.MapType>;
 
     constructor(_mapDiv: Element, _opts?: google.maps.MapOptions) {
         console.log("Google Maps mock is used.");
@@ -264,8 +267,7 @@ class MockGeocoder implements google.maps.Geocoder {
     }
     ];
 
-    geocode(request: google.maps.GeocoderRequest, callback: (results: google.maps.GeocoderResult[],
-                                                             status: google.maps.GeocoderStatus) => void): void {
+    geocode(request: google.maps.GeocoderRequest, callback: (results: google.maps.GeocoderResult[], status: google.maps.GeocoderStatus) => void): void {
         if (request.address === "multipleAddress") {
             callback(this.multipleResult, google.maps.GeocoderStatus.OK);
         } else if (request.address === "invalidAddress") {
@@ -372,7 +374,7 @@ class LatLngMock implements google.maps.LatLng {
 // tslint:disable-next-line:max-classes-per-file
 class MarkerMock implements google.maps.Marker {
     static MAX_ZINDEX: number;
-    map: google.maps.Map;
+    map!: google.maps.Map;
 
     constructor(_opts?: google.maps.MarkerOptions) {/** */
     }

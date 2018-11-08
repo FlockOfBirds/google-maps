@@ -6,6 +6,7 @@ export interface MarkerProps {
     url?: string;
 }
 
+// tslint:disable-next-line:variable-name
 export const Marker: StatelessComponent<MarkerProps> = (props) => {
     if (props.url) {
         const style = { backgroundImage: `url(${props.url})` };

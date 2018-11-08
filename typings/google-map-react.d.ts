@@ -42,6 +42,7 @@ declare module "google-map-react" {
         yesIWantToUseGoogleMapApiInternals?: boolean;
     }
 
+    // tslint:disable-next-line:variable-name
     export const GoogleMap: React.ComponentClass<GoogleMapProps>;
 
     export { GoogleMap as default };

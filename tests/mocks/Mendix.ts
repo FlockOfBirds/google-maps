@@ -1,19 +1,20 @@
 /* tslint:disable */
 class MxMock implements mx.MxInterface {
-    appUrl: string;
-    baseUrl: string;
-    remoteUrl: string;
-    modulePath: string
+    onlineData!: mx.OnlineData;
+    appUrl!: string;
+    baseUrl!: string;
+    remoteUrl!: string;
+    modulePath!: string;
     addOnLoad(_callback: () => void): void { /* */ }
     login(_username: string, _password: string, _onSuccess: () => void, _onError: () => void): void { /* */ };
     logout(): void { /* */ }
-    data: mx.data;
-    meta: mx.meta;
-    parser: mx.parser;
-    server: mx.server;
-    session: mx.session;
-    ui: mx.ui;
-    isOffline: () => false;
+    data!: mx.data;
+    meta!: mx.meta;
+    parser!: mx.parser;
+    server!: mx.server;
+    session!: mx.session;
+    ui!: mx.ui;
+    isOffline!: () => false;
     onError(_error: Error): void { /* */ }
 }
 
@@ -59,7 +60,7 @@ class MxUiMock implements mx.ui {
     openForm(
         _path: string,
         _args?: {
-            location?: "content" | "popup" | "modal",
+            location?: "content" | "popup" | "modal" | "node",
             domNode?: HTMLElement,
             title?: string,
             context?: mendix.lib.MxContext,

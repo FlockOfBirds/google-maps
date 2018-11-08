@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
     "rootDir": "./",
     "outDir": "dist/tsc/",
     "noEmitOnError": true,
@@ -8,7 +7,12 @@
     "module": "amd",
     "target": "es5",
     "lib": [ "es2015", "dom" ],
-    "types": [ "mendix-client", "jasmine", "@types/googlemaps", "core-js" ],
+    "types": [
+      "mendix-client",
+      "@types/googlemaps",
+      "jasmine",
+      "core-js"
+    ],
     "moduleResolution": "node",
     "declaration": false,
     "removeComments": true,
@@ -17,6 +21,7 @@
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
     "strict": true,
+    "strictFunctionTypes": false,
     "skipLibCheck": false,
     "noUnusedLocals": true,
     "noUnusedParameters": true

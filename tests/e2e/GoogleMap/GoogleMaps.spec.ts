@@ -31,6 +31,7 @@ describe("Google maps", () => {
 
         browser.waitUntil(() => {
             const markerList: Element[] = xpathPage.markers.value;
+
             return markerList.length > 1;
         }, 5000, "expected more markers to be populated");
     });
