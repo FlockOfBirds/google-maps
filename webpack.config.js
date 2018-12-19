@@ -29,6 +29,7 @@ const widgetConfig = {
             }) }
         ]
     },
+    mode: "development",
     devtool: "source-map",
     externals: [ "mendix/lang", "react", "react-dom" ],
     plugins: [
@@ -56,6 +57,7 @@ const previewConfig = {
             { test: /\.css$/, loader: "raw-loader" }
         ]
     },
+    mode: "development",
     devtool: "inline-source-map",
     externals: [ "react", "react-dom" ],
     plugins: [
@@ -79,6 +81,7 @@ const previewContextConfig = {
             { test: /\.css$/, loader: "raw-loader" }
         ]
     },
+    mode: "development",
     devtool: "inline-source-map",
     externals: [ "react", "react-dom" ],
     plugins: [

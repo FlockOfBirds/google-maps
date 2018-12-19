@@ -19,7 +19,8 @@
     "strict": true,
     "skipLibCheck": false,
     "noUnusedLocals": true,
-    "noUnusedParameters": true
+    "noUnusedParameters": true,
+    "strictPropertyInitialization": false
   },
   "exclude": [
     "dist/",

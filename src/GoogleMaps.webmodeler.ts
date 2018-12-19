@@ -1,4 +1,4 @@
-import { Component, ReactElement, createElement } from "react";
+import { Component, ReactNode, createElement } from "react";
 import { Map, MapProps } from "./components/Map";
 import { Alert } from "./components/Alert";
 import { GoogleMapContainerProps } from "./components/GoogleMapContainer";
@@ -14,7 +14,7 @@ type VisibilityMap = {
 export class preview extends Component<GoogleMapContainerProps, {}> {
     render() {
         const warnings = ValidateConfigs.validate(this.props);
-        let reactElement: ReactElement<{}>;
+        let reactElement: ReactNode;
         if (!warnings) {
             reactElement = createElement(Map, preview.transformProps(this.props));
         } else {

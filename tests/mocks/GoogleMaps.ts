@@ -32,6 +32,10 @@ class MapsMock implements google.maps.Map {
         return new google.maps.LatLngBounds();
     }
 
+    setClickableIcons(_clickable: boolean): void {
+        //
+    };
+
     getCenter(): google.maps.LatLng {
         return new google.maps.LatLng(0, 0);
     }

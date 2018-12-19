@@ -179,7 +179,7 @@ class GoogleMapContainer extends Component<GoogleMapContainerProps, { alertMessa
     private fetchLocationsByMicroflow(microflow: string, contextObject?: mendix.lib.MxObject) {
         if (microflow) {
             window.mx.ui.action(microflow, {
-                callback: (mxObjects: mendix.lib.MxObject[]) => this.setLocationsFromMxObjects(mxObjects),
+                callback: mxObjects => this.setLocationsFromMxObjects(mxObjects as mendix.lib.MxObject[]),
                 error: error => this.setState({
                     alertMessage: `An error occurred while retrieving locations: ${error.message} in ` + microflow,
                     locations: []

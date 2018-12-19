@@ -67,7 +67,7 @@ describe("Map", () => {
     beforeAll(() => {
         mxOriginal = window.mx;
         window.google = mockGoogleMaps;
-        window.mx = mockMendix;
+        window.mx = mockMendix as any;
     });
 
     it("should render with the map structure", () => {
@@ -80,7 +80,7 @@ describe("Map", () => {
                     createElement(Alert, {
                         bootstrapStyle: "danger",
                         className: "widget-google-maps-alert",
-                        message: undefined
+                        message: ""
                     }),
                     createElement(GoogleMap, {
                         bootstrapURLKeys: { key: undefined },
@@ -104,7 +104,7 @@ describe("Map", () => {
                     createElement(Alert, {
                         bootstrapStyle: "danger",
                         className: "widget-google-maps-alert",
-                        message: undefined
+                        message: ""
                     }),
                     createElement(GoogleMap, {
                         bootstrapURLKeys: { key: undefined },
@@ -128,7 +128,7 @@ describe("Map", () => {
                     createElement(Alert, {
                         bootstrapStyle: "danger",
                         className: "widget-google-maps-alert",
-                        message: undefined
+                        message: ""
                     }),
                     createElement(GoogleMap, {
                         bootstrapURLKeys: { key: undefined },
@@ -152,7 +152,7 @@ describe("Map", () => {
                     createElement(Alert, {
                         bootstrapStyle: "danger",
                         className: "widget-google-maps-alert",
-                        message: undefined
+                        message: ""
                     }),
                     createElement(GoogleMap, {
                         bootstrapURLKeys: { key: undefined },
@@ -227,11 +227,11 @@ describe("Map", () => {
         });
 
         it("should display an error", () => {
-            const actionErrorMessage = `Can not find address ${invalidAddress}`;
+            const actionErrorMessage = `Can not find address: ${invalidAddress}`;
             spyOn(window.mx.ui, "error").and.callThrough();
 
             const output = setUpMap([ { address: invalidAddress } ]);
-            const mapComponent = output.instance();
+            const mapComponent = output.instance() as any;
 
             expect(mapComponent.state.alertMessage).toBe(actionErrorMessage);
         });

@@ -1,4 +1,6 @@
 /* tslint:disable */
+// @ts-ignore
+
 class MxMock implements mx.MxInterface {
     appUrl: string;
     baseUrl: string;
@@ -59,7 +61,7 @@ class MxUiMock implements mx.ui {
     openForm(
         _path: string,
         _args?: {
-            location?: "content" | "popup" | "modal",
+            location?: "content" | "popup" | "modal" | "node",
             domNode?: HTMLElement,
             title?: string,
             context?: mendix.lib.MxContext,
@@ -74,6 +76,6 @@ class MxUiMock implements mx.ui {
 }
 
 let mxMockObject =  MxMock.prototype;
-mxMockObject.ui = MxUiMock.prototype;
+mxMockObject.ui = MxUiMock.prototype as any;
 
 export const mockMendix = mxMockObject;
