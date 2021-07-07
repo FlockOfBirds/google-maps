@@ -26,10 +26,6 @@ export class ValidateConfigs {
             return "";
         };
 
-        if (props.dataSource === "static" && !props.staticLocations.length) {
-            message.push("At least one static location is required for 'Data source 'Static'");
-        }
-
         if (props.dataSource === "static") {
             const invalidLocations = props.staticLocations.filter(location =>
                 !location.address && !(location.latitude && location.longitude)

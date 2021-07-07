@@ -15,7 +15,7 @@ declare module "google-map-react" {
     }
 
     export interface BootstrapURLKeysProps {
-        key?: string;
+        key: string;
         v?: string;
     }
 
@@ -37,6 +37,7 @@ declare module "google-map-react" {
         defaultZoom?: number;
         googleMapLoader?: () => void;
         onGoogleApiLoaded?: (mapLoader: GoogleMapLoader) => void;
+        onChildClick?: (hoverKey: number, childProps: LatLng) => void;
         options?: MapLoaderProps;
         resetBoundsOnResize?: boolean;
         yesIWantToUseGoogleMapApiInternals?: boolean;

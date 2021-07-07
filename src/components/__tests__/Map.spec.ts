@@ -23,7 +23,7 @@ describe("Map", () => {
     let mxOriginal: mx.MxInterface;
 
     const setUpMap = (
-        locationsParam: Location[], APIKeyParam?: string,
+        locationsParam: Location[], APIKeyParam: string,
         widthParam?: number,
         heightParam?: number,
         widthUnitParam?: widthUnitType,
@@ -71,7 +71,7 @@ describe("Map", () => {
     });
 
     it("should render with the map structure", () => {
-        const map = setUpMap([ { address } ], undefined, 100, 75, "percentage", "percentageOfWidth");
+        const map = setUpMap([ { address } ], APIKey, 100, 75, "percentage", "percentageOfWidth");
         const style = { paddingBottom: "75%", width: "100%" };
 
         expect(map).toBeElement(
@@ -83,7 +83,7 @@ describe("Map", () => {
                         message: undefined
                     }),
                     createElement(GoogleMap, {
-                        bootstrapURLKeys: { key: undefined },
+                        bootstrapURLKeys: { key: APIKey },
                         center: defaultCenterLocation,
                         defaultZoom: 7,
                         onGoogleApiLoaded: jasmine.any(Function) as any,
@@ -95,7 +95,7 @@ describe("Map", () => {
     });
 
     it("should render a structure correctly with pixels", () => {
-        const map = setUpMap([ { address } ], undefined, 100, 75, "pixels", "pixels");
+        const map = setUpMap([ { address } ], APIKey, 100, 75, "pixels", "pixels");
         const style = { paddingBottom: "75px", width: "100px" };
 
         expect(map).toBeElement(
@@ -107,7 +107,7 @@ describe("Map", () => {
                         message: undefined
                     }),
                     createElement(GoogleMap, {
-                        bootstrapURLKeys: { key: undefined },
+                        bootstrapURLKeys: { key: APIKey },
                         center: defaultCenterLocation,
                         defaultZoom: 7,
                         onGoogleApiLoaded: jasmine.any(Function) as any,
@@ -119,7 +119,7 @@ describe("Map", () => {
     });
 
     it("should render a structure correctly with percentage", () => {
-        const map = setUpMap([ { address } ], undefined, 20, 30, "percentage", "pixels");
+        const map = setUpMap([ { address } ], APIKey, 20, 30, "percentage", "pixels");
         const style = { width: "20%", paddingBottom: "30px" };
 
         expect(map).toBeElement(
@@ -131,7 +131,7 @@ describe("Map", () => {
                         message: undefined
                     }),
                     createElement(GoogleMap, {
-                        bootstrapURLKeys: { key: undefined },
+                        bootstrapURLKeys: { key: APIKey },
                         center: defaultCenterLocation,
                         defaultZoom: 7,
                         onGoogleApiLoaded: jasmine.any(Function) as any,
@@ -143,7 +143,7 @@ describe("Map", () => {
     });
 
     it("should render a structure correctly with percentage of parent", () => {
-        const map = setUpMap([ { address } ], undefined, 20, 30, "percentage", "percentageOfParent");
+        const map = setUpMap([ { address } ], APIKey, 20, 30, "percentage", "percentageOfParent");
         const style = { width: "20%", height: "30%" };
 
         expect(map).toBeElement(
@@ -155,7 +155,7 @@ describe("Map", () => {
                         message: undefined
                     }),
                     createElement(GoogleMap, {
-                        bootstrapURLKeys: { key: undefined },
+                        bootstrapURLKeys: { key: APIKey },
                         center: defaultCenterLocation,
                         defaultZoom: 7,
                         onGoogleApiLoaded: jasmine.any(Function) as any,
@@ -170,13 +170,13 @@ describe("Map", () => {
         it("should not look up the location", () => {
             spyOn(window.google.maps.Geocoder.prototype, "geocode").and.callThrough();
 
-            setUpMap([ { address: "" } ]);
+            setUpMap([ { address: "" } ], APIKey);
 
             expect(window.google.maps.Geocoder.prototype.geocode).not.toHaveBeenCalled();
         });
 
         it("should not display a marker", () => {
-            const output = setUpMap([ { address: "" } ]);
+            const output = setUpMap([ { address: "" } ], APIKey);
 
             const marker = output.find(Marker);
 
@@ -184,7 +184,7 @@ describe("Map", () => {
         });
 
         it("should center to the default address if no coordinates", () => {
-            const output = setUpMap([ { address: "" } ], undefined, 100, 75, "pixels", "pixels", "");
+            const output = setUpMap([ { address: "" } ], APIKey, 100, 75, "pixels", "pixels", "");
 
             expect(output.state("center").lat).toBe(defaultCenterLocation.lat);
             expect(output.state("center").lng).toBe(defaultCenterLocation.lng);
@@ -193,7 +193,7 @@ describe("Map", () => {
         it("should center to the coordinates if provided", () => {
             const coordinateLocation = { lat: 21.2, lng: 1.5 };
 
-            const output = setUpMap([ { latitude: coordinateLocation.lat, longitude: coordinateLocation.lng } ]);
+            const output = setUpMap([ { latitude: coordinateLocation.lat, longitude: coordinateLocation.lng } ], APIKey);
 
             expect(output.state("locations")[0].latitude).toBe(coordinateLocation.lat);
             expect(output.state("locations")[0].longitude).toBe(coordinateLocation.lng);
@@ -204,7 +204,7 @@ describe("Map", () => {
         it("should lookup the location", () => {
             spyOn(window.google.maps.Geocoder.prototype, "geocode");
 
-            setUpMap([ { address } ]);
+            setUpMap([ { address } ], APIKey);
 
             expect(window.google.maps.Geocoder.prototype.geocode).toHaveBeenCalled();
         });
@@ -212,14 +212,14 @@ describe("Map", () => {
 
     describe("with an invalid address", () => {
         it("should not render a marker", () => {
-            const output = setUpMap([ { address: invalidAddress } ]);
+            const output = setUpMap([ { address: invalidAddress } ], APIKey);
 
             const marker = output.find(Marker);
             expect(marker.length).toBe(0);
         });
 
         it("should have no marker if no coordinate is provided", () => {
-            const output = setUpMap([ { address: invalidAddress } ]);
+            const output = setUpMap([ { address: invalidAddress } ], APIKey);
 
             const marker = output.find(Marker);
 
@@ -230,7 +230,7 @@ describe("Map", () => {
             const actionErrorMessage = `Can not find address ${invalidAddress}`;
             spyOn(window.mx.ui, "error").and.callThrough();
 
-            const output = setUpMap([ { address: invalidAddress } ]);
+            const output = setUpMap([ { address: invalidAddress } ], APIKey);
             const mapComponent = output.instance();
 
             expect(mapComponent.state.alertMessage).toBe(actionErrorMessage);
@@ -239,24 +239,10 @@ describe("Map", () => {
         it("should have a marker if coordinates are provided", () => {
             const coordinateLocation = { lat: 21.2, lng: 1.5 };
 
-            const output = setUpMap([ { latitude: coordinateLocation.lat, longitude: coordinateLocation.lng } ]);
+            const output = setUpMap([ { latitude: coordinateLocation.lat, longitude: coordinateLocation.lng } ], APIKey);
 
             expect(output.state("locations")[0].latitude).toBe(coordinateLocation.lat);
             expect(output.state("locations")[0].longitude).toBe(coordinateLocation.lng);
-        });
-    });
-
-    describe("loads", () => {
-        it("if no API key is configured", () => {
-            const output = setUpMap([ { address } ]);
-
-            expect((output.find(GoogleMap).prop("bootstrapURLKeys") as any).key).not.toBe(APIKey);
-        });
-
-        it("when API key is configured", () => {
-            const output = setUpMap([ { address } ], APIKey);
-
-            expect((output.find(GoogleMap).prop("bootstrapURLKeys") as any).key).toBe(APIKey);
         });
     });
 

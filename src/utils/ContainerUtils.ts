@@ -5,6 +5,7 @@ export interface Location {
     address?: string;
     latitude?: number;
     longitude?: number;
+    mxObject?: mendix.lib.MxObject;
     url?: string;
 }
 

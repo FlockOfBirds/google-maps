@@ -14,7 +14,7 @@ export type heightUnitType = "percentageOfWidth" | "percentageOfParent" | "pixel
 
 export interface MapProps {
     className?: string;
-    apiKey?: string;
+    apiKey: string;
     autoZoom: boolean;
     defaultCenterAddress: string;
     defaultCenterLatitude: string;
@@ -29,6 +29,7 @@ export interface MapProps {
     optionScroll: boolean;
     optionStreetView: boolean;
     optionZoomControl: boolean;
+    onClickAction?: (location: Location) => void;
     width: number;
     widthUnit: widthUnitType;
     zoomLevel: number;
@@ -101,6 +102,7 @@ export class Map extends Component<MapProps, MapState> {
                 bootstrapURLKeys: { key: this.props.apiKey, v: "3.29" },
                 center: this.state.center,
                 defaultZoom: this.props.zoomLevel,
+                onChildClick: this.onChildClick,
                 onGoogleApiLoaded: this.handleOnGoogleApiLoaded,
                 options: {
                     draggable: this.props.optionDrag,
@@ -306,5 +308,11 @@ export class Map extends Component<MapProps, MapState> {
             });
         }
         return markerElements;
+    }
+
+    private onChildClick = (hoverKey: number, _childProps: LatLng) => {
+        if (this.props.onClickAction) {
+            this.props.onClickAction(this.props.locations[hoverKey]);
+        }
     }
 }

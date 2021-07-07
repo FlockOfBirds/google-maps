@@ -1,9 +1,11 @@
 import { StatelessComponent, createElement } from "react";
+import { LatLng } from "google-map-react";
 
 export interface MarkerProps {
     lat: number;
     lng: number;
     url?: string;
+    onClickAction?: (data: LatLng) => void;
 }
 
 export const Marker: StatelessComponent<MarkerProps> = (props) => {
@@ -12,7 +14,8 @@ export const Marker: StatelessComponent<MarkerProps> = (props) => {
 
         return createElement("div", {
             className: "widget-google-maps-marker-url",
-            style
+            style,
+            onClick: props.onClickAction
         });
     }
 

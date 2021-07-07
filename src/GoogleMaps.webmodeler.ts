@@ -59,20 +59,11 @@ export class preview extends Component<GoogleMapContainerProps, {}> {
 }
 
 export function getVisibleProperties(valueMap: GoogleMapContainerProps, visibilityMap: VisibilityMap) {
-    if (valueMap.dataSource !== "static") {
-        visibilityMap.staticLocations = false;
-    }
     if (valueMap.dataSource !== "context") {
         visibilityMap.latitudeAttributeContext = false;
         visibilityMap.longitudeAttributeContext = false;
         visibilityMap.addressAttributeContext = false;
         visibilityMap.markerImageAttributeContext = false;
-    }
-    if (valueMap.dataSource !== "microflow") {
-        visibilityMap.dataSourceMicroflow = false;
-    }
-    if (valueMap.dataSource !== "XPath") {
-        visibilityMap.entityConstraint = false;
     }
     if (valueMap.dataSource !== "microflow" && valueMap.dataSource !== "XPath") {
         visibilityMap.locationsEntity = false;
@@ -81,6 +72,15 @@ export function getVisibleProperties(valueMap: GoogleMapContainerProps, visibili
         visibilityMap.addressAttribute = false;
         visibilityMap.markerImageAttribute = false;
     }
+    visibilityMap.staticLocations = valueMap.dataSource === "static";
+    visibilityMap.dataSourceMicroflow = valueMap.dataSource === "microflow";
+    visibilityMap.entityConstraint = valueMap.dataSource === "XPath";
+
+    visibilityMap.onClickMicroflow = valueMap.onClickEvent === "callMicroflow";
+    visibilityMap.onClickNanoflow = valueMap.onClickEvent === "callNanoflow";
+    visibilityMap.page = valueMap.onClickEvent === "showPage";
+    visibilityMap.openPageAs = valueMap.onClickEvent === "showPage";
+
     return visibilityMap;
 }
 

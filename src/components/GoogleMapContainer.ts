@@ -6,6 +6,7 @@ import { Location, StaticLocation, getStaticMarkerUrl, parseStaticLocations, par
 
 interface WrapperProps {
     "class"?: string;
+    mxform: mxui.lib.form._FormBase;
     friendlyId: string;
     mxObject: mendix.lib.MxObject;
     style: string;
@@ -40,21 +41,38 @@ interface GoogleMapContainerProps extends WrapperProps {
     markerImageAttributeContext: string;
     staticLocations: StaticLocation[];
     markerImages: Array<{ enumKey: string, enumImage: string}>;
+    onClickMicroflow: string;
+    onClickNanoflow: Nanoflow;
+    onClickEvent: OnClickOptions;
+    openPageAs: PageLocation;
+    page: string;
     width: number;
     widthUnit: widthUnitType;
     zoomLevel: number;
 }
 
-type DataSource = "static" | "context" | "XPath" | "microflow";
+interface GoogleMapContainerState {
+    alertMessage?: string;
+    locations: Location[];
+}
 
-class GoogleMapContainer extends Component<GoogleMapContainerProps, { alertMessage?: string, locations: Location[] }> {
+interface Nanoflow {
+    nanoflow: object[];
+    paramsSpec: { Progress: string };
+}
+
+type DataSource = "static" | "context" | "XPath" | "microflow";
+type OnClickOptions = "doNothing" | "showPage" | "callMicroflow" | "callNanoflow";
+type PageLocation = "content" | "popup" | "modal";
+
+class GoogleMapContainer extends Component<GoogleMapContainerProps, GoogleMapContainerState> {
     private subscriptionHandles: number[];
 
     constructor(props: GoogleMapContainerProps) {
         super(props);
 
         this.subscriptionHandles = [];
-        this.state = { alertMessage: "", locations: [] };
+        this.state = { alertMessage: GoogleMapContainer.validateProps(this.props), locations: [] };
         this.subscribe(this.props.mxObject);
     }
 
@@ -81,6 +99,7 @@ class GoogleMapContainer extends Component<GoogleMapContainerProps, { alertMessa
                 optionScroll: this.props.optionScroll,
                 optionStreetView: this.props.optionStreetView,
                 optionZoomControl: this.props.optionZoomControl,
+                onClickAction: this.props.onClickEvent !== "doNothing" ? this.executeAction : undefined,
                 style: parseStyle(this.props.style),
                 mapStyles: this.props.mapStyles,
                 width: this.props.width,
@@ -208,6 +227,7 @@ class GoogleMapContainer extends Component<GoogleMapContainerProps, { alertMessa
                 address,
                 latitude: lat ? Number(lat) : undefined,
                 longitude: lon ? Number(lon) : undefined,
+                mxObject,
                 url
             };
         });
@@ -221,6 +241,53 @@ class GoogleMapContainer extends Component<GoogleMapContainerProps, { alertMessa
         return image
             ? getStaticMarkerUrl(image.enumImage as string, this.props.defaultMakerIcon)
             : "";
+    }
+
+    public static validateProps(props: GoogleMapContainerProps): string {
+        let errorMessage = "";
+        if (props.onClickEvent === "callMicroflow" && !props.onClickMicroflow) {
+            errorMessage = "A 'Microflow' is required for on click 'Marker' event 'Call a microflow'";
+        } else if (props.onClickEvent === "callNanoflow" && !props.onClickNanoflow.nanoflow) {
+            errorMessage = "A 'Nanoflow' is required for on click 'Marker' event 'Call a nanoflow'";
+        } else if (props.onClickEvent === "showPage" && !props.page) {
+            errorMessage = "A 'Page' is required for on click 'Marker' event 'Show a page'";
+        }
+        if (errorMessage) {
+            errorMessage = `Error in google maps configuration: ${errorMessage}`;
+        }
+
+        return errorMessage;
+    }
+
+    private executeAction = (markerLocation: Location) => {
+        const object = markerLocation.mxObject;
+
+        if (object) {
+            const { mxform, onClickEvent, onClickMicroflow, onClickNanoflow, openPageAs, page } = this.props;
+            const context = new mendix.lib.MxContext();
+            context.setContext(object.getEntity(), object.getGuid());
+
+            if (onClickEvent === "callMicroflow" && onClickMicroflow) {
+                mx.ui.action(onClickMicroflow, {
+                    context,
+                    origin: mxform,
+                    error: error => window.mx.ui.error(`Error while executing on click microflow ${onClickMicroflow} : ${error.message}`)
+                });
+            } else if (onClickEvent === "callNanoflow" && onClickNanoflow.nanoflow) {
+                window.mx.data.callNanoflow({
+                    nanoflow: onClickNanoflow,
+                    origin: mxform,
+                    context,
+                    error: error => window.mx.ui.error(`Error while executing on click nanoflow: ${error.message}`)
+                });
+            } else if (onClickEvent === "showPage" && page) {
+                window.mx.ui.openForm(page, {
+                    location: openPageAs,
+                    context,
+                    error: error => window.mx.ui.error(`Error while opening page ${page}: ${error.message}`)
+                });
+            }
+        }
     }
 }
 

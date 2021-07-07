@@ -14,6 +14,10 @@
 * Data sources Context, Static, XPath or Microflow
 * Customize the display of the marker. If the marker can not be found from the custom markers. The widget will use
   the specified custom markers else it will use the widget bundled marker.
+* Supports actions when a marker is clicked:
+    * Open page
+    * Call microflow
+    * Call nanoflow
 
 ## Limitations
 Context and static datasource are Offline capable with Mendix data, however still need to be online to see the map.
@@ -23,7 +27,7 @@ from Google applies, especially for geocoding. We even advise geocoding your loc
 Mendix application and store them for later use as coordinates on the widget.
 
 ## Dependencies
-Mendix 7.9.0
+Mendix 7.13.1
 
 ## How it Works
 When displaying locations, the widget will prioritize coordinates over addresses.In the event that 

@@ -59,8 +59,8 @@ class MxUiMock implements mx.ui {
     openForm(
         _path: string,
         _args?: {
-            location?: "content" | "popup" | "modal",
-            domNode?: HTMLElement,
+            location?: "content" | "popup" | "modal" | "node",
+            domNode?: HTMLElement | undefined,
             title?: string,
             context?: mendix.lib.MxContext,
             callback?(form: mxui.lib.form._FormBase): void,
